@@ -3,26 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\User;
-use App\Workout;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
-class WorkoutController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        return response()->json(
-            Workout::where('user_id', '=', Auth::guard('api')->user()->id)
-                ->with(['exercises', 'user'])->get()
-        );
+        return response()->json(User::all(['id', 'email', 'created_at', 'updated_at']));
     }
 
     /**
@@ -91,11 +88,16 @@ class WorkoutController extends Controller
         //
     }
 
-    /**
-     * 
-     */
-    public function destroyAll()
-    {
 
+    public function auth(Request $request)
+    {
+        if (!$request->has(['email', 'password'])) {
+            abort(401);
+        }
+        if (Auth::attempt($request->all())) {
+            return response()->json(User::where('email', '=', $request->get('email'))->first(['id', 'name', 'email', 'api_token', 'created_at', 'updated_at']));
+        }
+        abort(403);
     }
+
 }

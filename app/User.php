@@ -21,13 +21,14 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token'
     ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function workouts() {
+    public function workouts()
+    {
         return $this->hasMany('App\Workout');
     }
 }
