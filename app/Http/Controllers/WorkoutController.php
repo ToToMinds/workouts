@@ -42,10 +42,7 @@ class WorkoutController extends Controller
         if ($workout->save()) {
             $workout->exercises()->sync($request->get('exercises'));
         }
-        echo "<pre>";
-        print_r($request->all());
-        echo "</pre>";
-        die();
+        return redirect('/workouts');
     }
 
     /**
