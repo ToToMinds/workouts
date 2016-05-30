@@ -32,7 +32,7 @@ Route::group(['prefix' => 'exercises'], function () {
     Route::post('/store', 'ExerciseController@store');
 });
 
-Route::group(['prefix' => 'api', 'namespace' => 'Api'], function () {
+Route::group(['prefix' => 'api', 'namespace' => 'Api', 'middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'workouts'], function () {
         Route::get('/', 'WorkoutController@index');
     });

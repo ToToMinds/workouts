@@ -21,9 +21,8 @@ class WorkoutController extends Controller
         if (!$request->has('user_token')) {
             abort(403);
         }
-        $userID = User::select('id')->where('user_token', '=', $request->get('user_token'))->first()->lists('id');
         return response()->json(
-            Workout::where('user_id', '=', $userID)
+            Workout::where('user_id', '=', Auth::guard('api')->user()->id)
                 ->with('exercises')->get()
         );
     }
