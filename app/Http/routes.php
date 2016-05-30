@@ -35,7 +35,7 @@ Route::group(['prefix' => 'exercises'], function () {
     Route::post('/store', 'ExerciseController@store');
 });
 
-Route::get('/auth', 'Api\UserController@auth');
+Route::post('/auth', 'Api\UserController@auth');
 
 Route::group(['prefix' => 'api', 'namespace' => 'Api', 'middleware' => 'auth:api'], function () {
 
