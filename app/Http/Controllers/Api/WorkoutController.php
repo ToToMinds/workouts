@@ -21,7 +21,7 @@ class WorkoutController extends Controller
     {
         return response()->json(
             Workout::where('user_id', '=', Auth::guard('api')->user()->id)
-                ->with('exercises')->get()
+                ->with(['exercises', 'user'])->get()
         );
     }
 
