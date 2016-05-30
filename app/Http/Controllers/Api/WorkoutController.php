@@ -18,9 +18,6 @@ class WorkoutController extends Controller
      */
     public function index(Request $request)
     {
-        if (!$request->has('user_token')) {
-            abort(403);
-        }
         return response()->json(
             Workout::where('user_id', '=', Auth::guard('api')->user()->id)
                 ->with('exercises')->get()

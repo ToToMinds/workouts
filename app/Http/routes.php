@@ -37,3 +37,7 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api', 'middleware' => 'auth:api
         Route::get('/', 'WorkoutController@index');
     });
 });
+
+Route::get('random', function() {
+    echo str_random(60);
+});
