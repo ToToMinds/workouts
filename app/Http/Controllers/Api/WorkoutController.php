@@ -43,7 +43,12 @@ class WorkoutController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $workout = new Workout($request->all());
+        if ($workout->save()) {
+            $workout->exercises()->sync($request->get('exercises'));
+            return response()->json($workout->load('exercises'));
+        }
+        return response()->json(['code' => 'NOT_OK']);
     }
 
     /**
@@ -54,7 +59,7 @@ class WorkoutController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json(Workout::find($id));
     }
 
     /**
@@ -77,7 +82,12 @@ class WorkoutController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $workout = Workout::find($id);
+        if ($workout->save($request->all())) {
+            $workout->exercises()->sync($request->get('exercises'));
+            return response()->json($workout->with('exercises'));
+        }
+        return response()->json(['code' => 'NOT_OK']);
     }
 
     /**
@@ -88,11 +98,15 @@ class WorkoutController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $workout = Workout::find($id);
+        if ($workout->delete()) {
+            return response()->json(['code' => 'OK', 'message' => 'Workout deleted']);
+        }
+        return response()->json(['code' => 'NOT_OK']);
     }
 
     /**
-     * 
+     *
      */
     public function destroyAll()
     {

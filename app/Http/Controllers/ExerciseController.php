@@ -89,4 +89,5 @@ class ExerciseController extends Controller
     {
         //
     }
+    
 }

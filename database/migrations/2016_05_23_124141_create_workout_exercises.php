@@ -17,8 +17,8 @@ class CreateWorkoutExercises extends Migration
             $table->unsignedInteger('workout_id');
             $table->unsignedInteger('exercise_id');
             $table->text('description');
-            $table->foreign('workout_id')->references('id')->on('workouts');
-            $table->foreign('exercise_id')->references('id')->on('exercises');
+            $table->foreign('workout_id')->references('id')->on('workouts')->onDelete('cascade');
+            $table->foreign('exercise_id')->references('id')->on('exercises')->onDelete('cascade');
             $table->timestamps();
         });
     }
