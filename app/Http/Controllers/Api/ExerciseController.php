@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use \Validator;
 
 class ExerciseController extends Controller
@@ -46,6 +47,9 @@ class ExerciseController extends Controller
             return response()->json(['code' => 'NOT_OK', 'message' => 'Exercise already exists']);
         }
         $exercise = new Exercise($request->all());
+        if ($request->hasFile('image')) {
+            $exercise->image_path = $this->getImagePath($request->file('image'));
+        }
         if ($exercise->save()) {
             return response()->json($exercise);
         }
@@ -108,6 +112,15 @@ class ExerciseController extends Controller
     public function destroy($id)
     {
         $exercise = Exercise::find($id);
+        if (!$exercise) {
+            return response()->json(['code' => 'NOT_OK', 'message' => 'Exercises does not exists']);
+        }
+        $filePath = public_path('/uploads/exercises/' . $exercise->image_path);
+        if (file_exists($filePath) && !is_dir($filePath)) {
+            if (unlink($filePath) === false) {
+                return response()->json(['code' => 'NOT_OK', 'message' => 'Exercises not deleted. Something went wrong.']);
+            }
+        }
         if ($exercise->delete()) {
             return response()->json(['code' => 'OK', 'message' => 'Exercise deleted']);
         }
@@ -117,5 +130,16 @@ class ExerciseController extends Controller
     public function destroyAll()
     {
 
+    }
+
+    /**
+     * @param UploadedFile $uploadedFile
+     * @return string
+     */
+    private function getImagePath(UploadedFile $uploadedFile)
+    {
+        $filename = md5($uploadedFile->getClientOriginalName()) . time() . '.' . $uploadedFile->getClientOriginalExtension();
+        $uploadedFile->move(public_path('/uploads/exercises/'), $filename);
+        return $filename;
     }
 }

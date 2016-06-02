@@ -13,8 +13,22 @@ class Exercise extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description',
+        'name', 'description', 'image_path'
     ];
+
+    /**
+     * Get the full path of the image.
+     *
+     * @param  string $value
+     * @return string
+     */
+    public function getImagePathAttribute($value)
+    {
+        if (!empty($value)) {
+            return url('/uploads/exercises/' . $value);
+        }
+        return '';
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
