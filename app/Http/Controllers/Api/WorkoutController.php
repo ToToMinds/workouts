@@ -44,6 +44,7 @@ class WorkoutController extends Controller
     public function store(Request $request)
     {
         $workout = new Workout($request->all());
+        $workout->user_id = Auth::guard('api')->user()->id;
         if ($workout->save()) {
             $workout->exercises()->sync($request->get('exercises'));
             return response()->json($workout->load('exercises'));
